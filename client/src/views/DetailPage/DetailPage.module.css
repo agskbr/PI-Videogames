@@ -1,0 +1,106 @@
+.loadingVideogame {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nameOfGame {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.cardContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.cardImage {
+  width: 50vw;
+  height: 30vw;
+  display: flex;
+  justify-content: center;
+  border-radius: 12px;
+  box-shadow: 4px 6px 20px grey;
+  margin-bottom: 40px;
+  margin-bottom: 40px;
+}
+
+.cardImage img {
+  overflow: auto;
+  object-fit: cover;
+  border-radius: 12px;
+  user-select: none;
+}
+
+.descriptionContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 10vw;
+  padding-right: 10vw;
+  padding-bottom: 20px;
+}
+
+.description {
+  width: 70vw;
+  text-align: justify;
+}
+
+.relAndRatContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 50px;
+}
+
+.releasedAndRat {
+  display: flex;
+  justify-content: space-between;
+  width: 70vw;
+  padding-left: 10vw;
+  padding-right: 10vw;
+}
+
+.releasedAndRat .released {
+  font-weight: 600;
+}
+
+.releasedAndRat .releasedDate {
+  padding-left: 5px;
+  color: grey;
+  font-weight: bold;
+}
+
+.rating {
+  display: flex;
+  justify-content: center;
+}
+
+.rating span {
+  font-weight: 600;
+}
+
+.ratingIcon {
+  padding-right: 5px;
+}
+.ratingIcon img {
+  object-fit: contain;
+  width: 15px;
+}
+
+.platforms {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.platforms div {
+  display: flex;
+  width: 70vw;
+  font-weight: 600;
+}
+
+

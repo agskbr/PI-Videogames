@@ -1,0 +1,32 @@
+.inputContainer {
+  padding-top: 10px;
+  padding-bottom: 30px;
+}
+
+.customInput {
+  background-color: #f3f3f3;
+  height: 30px;
+  width: 20vw;
+  border-radius: 10px;
+  padding: 10px;
+  border: none;
+}
+
+.customInput:focus {
+  outline: none;
+}
+
+.labelContainer {
+  display: flex;
+  width: 80%;
+  overflow: hidden;
+  height: 20px;
+  padding-top: 5px;
+  padding-left: 10px;
+}
+
+.inputContainer .labelContainer label {
+  font-size: 12px;
+  color: red;
+  padding-left: 10px;
+}

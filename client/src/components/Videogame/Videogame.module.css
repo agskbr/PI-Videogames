@@ -1,0 +1,66 @@
+.cardGame {
+  background-color: #f3f3f3;
+  margin: 10px;
+  width: 300px;
+  border-radius: 12px;
+}
+.cardGame img {
+  width: 80%;
+  height: 200px;
+  object-fit: cover;
+  user-select: none;
+  border-radius: 10px;
+}
+
+.cardGame:hover {
+  cursor: pointer;
+  background-color: whitesmoke;
+  transform: scale(1.02);
+  transition: all 200ms ease-in-out;
+  box-shadow: 8px 5px 25px rgba(0, 0, 0, 0.535);
+}
+
+.nameContainer {
+  padding-left: 5px;
+  padding-right: 5px;
+  display: flex;
+  justify-content: center;
+  align-self: start;
+  height: 60px;
+  padding-bottom: 15px;
+}
+
+.principalRatingContainer {
+  display: flex;
+  margin-top: 10px;
+  justify-content: end;
+}
+
+.principalRatingContainer h5 {
+  color: white;
+}
+.rating {
+  background-color: #93203c;
+  border-bottom-right-radius: 10px;
+  border-top-left-radius: 10px;
+  width: 60px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  padding-right: 25px;
+  align-items: center;
+}
+
+.starIconContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-right: 10px;
+  width: 15px;
+  height: 15px;
+}
+
+.starIconContainer img {
+  width: 15px;
+  height: 15px;
+}

@@ -1,0 +1,21 @@
+.filterCard {
+  width: 100px;
+  background-color: #f3f3f3;
+  height: 50px;
+  width: 180px;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 8px;
+  align-items: center;
+  padding-left: 8px;
+  user-select: none;
+  border: none;
+}
+
+.filterCard:hover {
+  cursor: pointer;
+}
+
+.filterCard:focus {
+  outline: none;
+}
