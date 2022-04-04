@@ -5,7 +5,7 @@ import {
   RECEIVED_POST,
   GET_VIDEOGAMES_BY_NAME,
   GET_VIDEOGAME_BY_ID,
-  GET_GENRES,
+  CREATE_VIDEOGAME,
 } from "../action-types/types";
 
 const base_url = "http://localhost:3001";
@@ -46,14 +46,14 @@ const getVideogameById = (id) => {
   };
 };
 
-const getGenres = () => {
+const createVideogame = (game) => {
   return async (dispatch) => {
     try {
-      const { data } = await axios.get(`${base_url}/genres`);
-      dispatch({ type: GET_GENRES, payload: data });
+      const { data } = await axios.post(`${base_url}/create/videogame`, game);
+      dispatch({ type: CREATE_VIDEOGAME, payload: data.created });
       dispatch({ type: RECEIVED_POST });
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.log(err);
     }
   };
 };
@@ -76,5 +76,5 @@ export {
   receivedPost,
   getVideogamesByName,
   getVideogameById,
-  getGenres,
+  createVideogame,
 };

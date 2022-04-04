@@ -95,12 +95,16 @@
   display: flex;
   width: 100%;
   justify-content: center;
+  align-items: flex-start;
 }
 
 .platforms div {
-  display: flex;
   width: 70vw;
+  text-align: start;
   font-weight: 600;
 }
-
-
+.platforms div ul {
+  text-align: start;
+  list-style-type: square;
+  color: grey;
+}

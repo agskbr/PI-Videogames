@@ -1,18 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getGenres, requestPost } from "../../store/actions/videogame_actions";
+import {
+  requestPost,
+  createVideogame,
+} from "../../store/actions/videogame_actions";
+import { getGenres } from "../../store/actions/genres-actions";
+import { getPlatforms } from "../../store/actions/platforms_actions";
 import CustomInput from "../../components/CustomInput/CustomInput.jsx";
 import FilterButton from "../../components/FilterButton/FilterButton.jsx";
+import { validateForm } from "./utils/validateForm";
 import style from "./CreateGamePage.module.css";
 export default function CreateGamePage() {
   const dispatch = useDispatch();
-  const { genres } = useSelector((state) => state);
+  const { genres, platforms, createdGame } = useSelector((state) => state);
   const [inputs, setInputs] = useState({
     name: "",
     description: "",
     released: "",
-    rating: 0.0,
-    platoform: "",
+    rating: "",
+    platforms: [],
     genres: [],
   });
   const [errors, setErrors] = useState({
@@ -20,22 +26,82 @@ export default function CreateGamePage() {
     description: "",
     released: "",
     rating: "",
-    platoform: "",
+    platoforms: "",
     genres: "",
   });
   useEffect(() => {
     dispatch(requestPost());
     dispatch(getGenres());
+    dispatch(getPlatforms());
   }, [dispatch]);
 
-  const AllowPlatforms = [
-    { id: 1, name: "Playstation" },
-    { id: 2, name: "Xbox" },
-    { id: 3, name: "PC" },
-  ];
+  const handlerChange = (e) => {
+    setInputs({ ...inputs, [e.target.name]: e.target.value });
+    setErrors(validateForm({ ...inputs, [e.target.name]: e.target.value }));
+  };
 
-  const handlerChange = (e) =>
-    setInputs((state) => ({ ...state, [e.target.name]: e.target.value }));
+  const hanlderSubmit = (e) => {
+    e.preventDefault();
+    setErrors(validateForm(inputs));
+    if (Object.values(errors).length === 0) {
+      const genresIncludes = genres.filter((genre) =>
+        inputs.genres.includes(genre.name)
+      );
+      const platformsIncludes = platforms.filter((platform) =>
+        inputs.platforms.includes(platform.name)
+      );
+
+      const genresById = Object.values(genresIncludes).map((genre) => genre.id);
+      const platformsById = Object.values(platformsIncludes).map(
+        (platform) => platform.id
+      );
+
+      dispatch(
+        createVideogame({
+          ...inputs,
+          genres: genresById,
+          platforms: platformsById,
+        })
+      );
+      setInputs({
+        name: "",
+        description: "",
+        released: "",
+        rating: "",
+        platforms: [],
+        genres: [],
+      });
+    }
+  };
+
+  const onChangeFilter = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    setInputs((state) => {
+      if (!state[name].includes(value)) {
+        return {
+          ...state,
+          [name]: [...state[name], value],
+        };
+      } else {
+        return {
+          ...state,
+        };
+      }
+    });
+    setErrors(validateForm({ ...inputs, [name]: value }));
+  };
+
+  const deleteOptionSelected = (name, index) => {
+    const newArray = inputs[name].filter((_, i) => i !== index);
+    setInputs((state) => {
+      return {
+        ...state,
+        [name]: newArray,
+      };
+    });
+    setErrors(validateForm({ ...inputs, [name]: newArray }));
+  };
 
   return (
     <div className={style.principalContainer}>
@@ -47,11 +113,7 @@ export default function CreateGamePage() {
       </div>
 
       <div className={style.inputsContainer}>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-          }}
-        >
+        <form onSubmit={hanlderSubmit}>
           <label>Nombre del juego</label>
           <CustomInput
             value={inputs.name}
@@ -83,7 +145,7 @@ export default function CreateGamePage() {
           />
           <label>Rating que tiene</label>
           <CustomInput
-            type="number"
+            type="text"
             name="rating"
             placeholder="Ej: 4.5"
             value={inputs.rating}
@@ -92,58 +154,58 @@ export default function CreateGamePage() {
             labelError={errors.rating}
           />
           <div className={style.filterContainer}>
-            <FilterButton options={AllowPlatforms} />
-            <h6>Plataformas seleccionadas</h6>
-            <br></br>
             <FilterButton
+              options={platforms}
+              labelGroup="Disponible para"
+              name="platforms"
+              onChange={onChangeFilter}
+            />
+            <label>{errors.platoforms}</label>
+
+            <h6>Plataformas seleccionadas</h6>
+            <div className={style.selectedGenres}>
+              <ul>
+                {inputs.platforms.map((platform, index) => (
+                  <div key={Math.random()} className={style.listItemGenres}>
+                    <li key={index}>{platform}</li>
+                    <button
+                      key={Math.random()}
+                      onClick={() => deleteOptionSelected("platforms", index)}
+                    >
+                      x
+                    </button>
+                  </div>
+                ))}
+              </ul>
+            </div>
+            <FilterButton
+              labelGroup="Agrega generos"
               name="genres"
-              onChange={(e) => {
-                setInputs((state) => {
-                  if (!state.genres.includes(e.target.value)) {
-                    return {
-                      ...state,
-                      genres: [...state.genres, e.target.value],
-                    };
-                  } else {
-                    return {
-                      ...state,
-                    };
-                  }
-                });
-              }}
+              onChange={onChangeFilter}
               options={genres}
             />
-          </div>
-          <h6>Categorias seleccionadas</h6>
-          <div className={style.selectedGenres}>
-            <ul>
-              {inputs.genres.map((genre, index) => (
-                <div key={Math.random()} className={style.listItemGenres}>
-                  <li key={index}>{genre}</li>
-                  <button
-                    key={Math.random()}
-                    onClick={() => {
-                      setInputs((state) => {
-                        const newState = state.genres.filter(
-                          (_, i) => i !== index
-                        );
-                        return {
-                          ...state,
-                          genres: newState,
-                        };
-                      });
-                    }}
-                  >
-                    x
-                  </button>
-                </div>
-              ))}
-            </ul>
+            <label>{errors.genres}</label>
+            <h6>Generos seleccionados</h6>
+            <div className={style.selectedGenres}>
+              <ul>
+                {inputs.genres.map((genre, index) => (
+                  <div key={Math.random()} className={style.listItemGenres}>
+                    <li key={index}>{genre}</li>
+                    <button
+                      key={Math.random()}
+                      onClick={() => deleteOptionSelected("genres", index)}
+                    >
+                      x
+                    </button>
+                  </div>
+                ))}
+              </ul>
+            </div>
           </div>
           <div>
             <input
-              disabled={true}
-              className={errors ? style.submitDisabledBtn : style.submitBtn}
+              disabled={createdGame}
+              className={style.submitBtn}
               type="submit"
               value="Crear juego"
             />

@@ -5,12 +5,16 @@ import {
   GET_GENRES,
   REQUEST_POST,
   RECEIVED_POST,
+  CREATE_VIDEOGAME,
+  GET_PLATFORMS,
 } from "../action-types/types";
 
 const initialState = {
   videogames: [],
   videogame: {},
   genres: [],
+  platforms: [],
+  createdGame: false,
   isLoading: false,
 };
 
@@ -31,10 +35,20 @@ const reducer = (state = initialState, action) => {
         ...state,
         videogame: action.payload,
       };
+    case CREATE_VIDEOGAME:
+      return {
+        ...state,
+        createdGame: action.payload,
+      };
     case GET_GENRES:
       return {
         ...state,
         genres: action.payload,
+      };
+    case GET_PLATFORMS:
+      return {
+        ...state,
+        platforms: action.payload,
       };
     case REQUEST_POST:
       return {

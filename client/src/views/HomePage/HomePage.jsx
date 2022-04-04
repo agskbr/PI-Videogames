@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Videogame from "../../components/Videogame/Videogame.jsx";
 import style from "./HomePage.module.css";
 import FilterButton from "../../components/FilterButton/FilterButton.jsx";
+import { filterFunction } from "../../utils/filterFunction";
 import Loader from "../../components/Loader/Loader.jsx";
 import {
   getAllVideogames,
@@ -12,6 +13,10 @@ import {
 } from "../../store/actions/videogame_actions";
 
 export default function HomePage() {
+  const [filterBy, setFilterBy] = useState({
+    genreOrCreate: "",
+    alphabeticOrRating: "",
+  });
   const [searchInput, setSearchInput] = useState({ videogame: "" });
   const [counterPage, setCounterPage] = useState({ page: 1 });
   const dispatch = useDispatch();
@@ -20,6 +25,12 @@ export default function HomePage() {
     dispatch(requestPost());
     dispatch(getAllVideogames());
   }, [dispatch]);
+
+  const handlerChangeFilter = (e) => {
+    const value = e.target.value;
+    setFilterBy({ ...filterBy, genreOrCreate: value });
+    filterFunction(value, videogames);
+  };
   return (
     <div>
       <h3>Bienvenido</h3>
@@ -31,7 +42,7 @@ export default function HomePage() {
         }}
       >
         <input
-          // disabled={isLoading}
+          disabled={isLoading}
           onChange={(event) =>
             setSearchInput((state) => ({
               ...state,
@@ -46,21 +57,25 @@ export default function HomePage() {
         <input className={style.submitBtn} type="submit" value="Buscar" />
       </form>
       <div>
-        <h4>Aqui se mostraran todos los juegos</h4>
+        <h4>Puedes filtrar los juegos</h4>
         <div className={style.filtersContainer}>
           <FilterButton
+            labelGroup="Filtrar por"
             options={[
               { id: 1, name: "Por genero" },
               { id: 2, name: "Agregado por mi" },
             ]}
+            onChange={handlerChangeFilter}
           />
           <FilterButton
+            labelGroup="Filtrar por"
             options={[
-              { id: 1, name: "Orden alfabetico ascendendete" },
-              { id: 2, name: "Orden alfabetico descendente" },
-              { id: 3, name: "Por rating ascendendete" },
-              { id: 4, name: "Por rating descendente" },
+              { id: 1, name: "Orden A-Z" },
+              { id: 2, name: "Orden Z-A" },
+              { id: 3, name: "Rating 1-5" },
+              { id: 4, name: "Rating 5-1" },
             ]}
+            onChange={handlerChangeFilter}
           />
         </div>
         <div className={style.addVideogameCard}>
@@ -69,25 +84,10 @@ export default function HomePage() {
           </Link>
         </div>
         <div className={style.gamesContainer}>
-          <Link className={style.linkToDetail} to={`/videogame/detail/123`}>
-            <Videogame />
-          </Link>
-          <Videogame />
-          <Videogame />
-          <Videogame />
-          <Videogame />
-          <Videogame />
-          <Videogame />
-          <Videogame />
-          <Videogame />
-          <Videogame />
-          <Videogame />
-          <Videogame />
-          <Videogame />
-          <Videogame />
-          <Videogame />
-          {/* {isLoading ? (
+          {isLoading ? (
             <div className={style.loadingHomepage}>{<Loader />}</div>
+          ) : typeof videogames === "string" ? (
+            <div className={style.gamesContainer}>El juego no existe</div>
           ) : (
             videogames.map((game) => (
               <Link
@@ -103,31 +103,31 @@ export default function HomePage() {
                 />
               </Link>
             ))
-          )} */}
+          )}
         </div>
       </div>
       <div className={style.pageControllerContainer}>
         <button
-          // disabled={isLoading}
+          disabled={isLoading}
           onClick={() =>
             counterPage.page <= 1
               ? null
               : setCounterPage({ ...counterPage, page: counterPage.page - 1 })
           }
           className={
-            /* isLoading ? style.pageControllerDisabled : */ style.pageController
+            isLoading ? style.pageControllerDisabled : style.pageController
           }
         >
           {"<"}
         </button>
         <p>{counterPage.page}</p>
         <button
-          // disabled={isLoading}
+          disabled={isLoading}
           onClick={() =>
             setCounterPage({ ...counterPage, page: counterPage.page + 1 })
           }
           className={
-            /* isLoading ? style.pageControllerDisabled : */ style.pageController
+            isLoading ? style.pageControllerDisabled : style.pageController
           }
         >
           {">"}

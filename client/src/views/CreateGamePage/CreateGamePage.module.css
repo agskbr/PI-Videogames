@@ -29,7 +29,7 @@
   color: grey;
 }
 .uploadImgContainer div {
-  width: 40px;
+  width: 50px;
   user-select: none;
   height: 40px;
   display: flex;
@@ -77,7 +77,11 @@
 
 .filterContainer {
   padding-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
+
 .selectedGenres {
   font-size: 14px;
   display: flex;
@@ -108,4 +112,11 @@
   background-color: red;
   color: white;
   cursor: pointer;
+}
+
+.filterContainer label {
+  font-size: 12px;
+  color: red;
+  padding-top: 5px;
+  padding-left: 20px;
 }

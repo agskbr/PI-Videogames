@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import img from "../../assets/videogame.png";
+import notImage from "../../assets/not-image.svg";
 import {
   getVideogameById,
   requestPost,
@@ -24,7 +24,7 @@ export default function DetailPage({ gameId }) {
       </div>
       <div className={style.cardContainer}>
         <div className={style.cardImage}>
-          <img src={videogame.image || img} alt="background" />
+          <img src={videogame.image || notImage} alt="background" />
         </div>
       </div>
       <div className={style.relAndRatContainer}>
@@ -45,7 +45,28 @@ export default function DetailPage({ gameId }) {
         <div className={style.description}>{videogame.description}</div>
       </div>
       <div className={style.platforms}>
-        <div>Disponible para:</div>{" "}
+        <div>
+          Disponible para:
+          <ul>
+            {videogame.platforms &&
+              videogame.platforms.map((platform, i) => (
+                <li key={platform.id || platform.platform.id}>
+                  {platform.name || platform.platform.name}
+                </li>
+              ))}
+          </ul>
+        </div>
+      </div>
+      <div className={style.platforms}>
+        <div>
+          Generos:
+          <ul>
+            {videogame.genres &&
+              videogame.genres.map((genre) => (
+                <li key={genre.id}>{genre.name}</li>
+              ))}
+          </ul>
+        </div>
       </div>
     </div>
   );
