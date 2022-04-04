@@ -18,7 +18,11 @@ export default function HomePage() {
     alphabeticOrRating: "",
   });
   const [searchInput, setSearchInput] = useState({ videogame: "" });
-  const [counterPage, setCounterPage] = useState({ page: 1 });
+  const [counterPage, setCounterPage] = useState({
+    page: 1,
+    resultsFrom: 0,
+    resultsTo: 15,
+  });
   const dispatch = useDispatch();
   const { videogames, isLoading } = useSelector((state) => state);
   useEffect(() => {
@@ -89,45 +93,71 @@ export default function HomePage() {
           ) : typeof videogames === "string" ? (
             <div className={style.gamesContainer}>El juego no existe</div>
           ) : (
-            videogames.map((game) => (
-              <Link
-                className={style.linkToDetail}
-                key={game.id}
-                to={`/videogame/detail/${game.id}`}
-              >
-                <Videogame
+            videogames
+              .slice(counterPage.resultsFrom, counterPage.resultsTo)
+              .map((game) => (
+                <Link
+                  className={style.linkToDetail}
                   key={game.id}
-                  image={game.image}
-                  name={game.name}
-                  rating={game.rating}
-                />
-              </Link>
-            ))
+                  to={`/videogame/detail/${game.id}`}
+                >
+                  <Videogame
+                    key={game.id}
+                    image={game.image}
+                    name={game.name}
+                    rating={game.rating}
+                  />
+                </Link>
+              ))
           )}
         </div>
       </div>
       <div className={style.pageControllerContainer}>
         <button
-          disabled={isLoading}
-          onClick={() =>
-            counterPage.page <= 1
-              ? null
-              : setCounterPage({ ...counterPage, page: counterPage.page - 1 })
-          }
+          disabled={isLoading || counterPage.page === 1}
+          onClick={() => {
+            if (counterPage.page > 1) {
+              setCounterPage({
+                ...counterPage,
+                page: counterPage.page - 1,
+                resultsFrom: counterPage.resultsFrom - 15,
+                resultsTo: counterPage.resultsTo - 15,
+              });
+            }
+          }}
           className={
-            isLoading ? style.pageControllerDisabled : style.pageController
+            isLoading || counterPage.page === 1
+              ? style.pageControllerDisabled
+              : style.pageController
           }
         >
           {"<"}
         </button>
         <p>{counterPage.page}</p>
         <button
-          disabled={isLoading}
-          onClick={() =>
-            setCounterPage({ ...counterPage, page: counterPage.page + 1 })
+          disabled={
+            isLoading ||
+            videogames.slice(
+              counterPage.resultsFrom + 15,
+              counterPage.resultsTo + 15
+            ).length === 0
           }
+          onClick={() => {
+            setCounterPage({
+              ...counterPage,
+              page: counterPage.page + 1,
+              resultsFrom: counterPage.resultsFrom + 15,
+              resultsTo: counterPage.resultsTo + 15,
+            });
+          }}
           className={
-            isLoading ? style.pageControllerDisabled : style.pageController
+            isLoading ||
+            videogames.slice(
+              counterPage.resultsFrom + 15,
+              counterPage.resultsTo + 15
+            ).length === 0
+              ? style.pageControllerDisabled
+              : style.pageController
           }
         >
           {">"}
