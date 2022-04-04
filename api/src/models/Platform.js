@@ -3,10 +3,11 @@ const { DataTypes } = require("sequelize");
 module.exports = (sequelize) => {
   // defino el modelo
   sequelize.define(
-    "Genre",
+    "Platform",
     {
       id: {
         type: DataTypes.INTEGER,
+        autoIncrement: true,
         primaryKey: true,
       },
       name: {
@@ -14,7 +15,6 @@ module.exports = (sequelize) => {
         allowNull: false,
       },
     },
-    { createdAt: false },
-    { tableName: "genres" }
+    { createdAt: false }
   );
 };
