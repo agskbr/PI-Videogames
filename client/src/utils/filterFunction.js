@@ -1,9 +1,8 @@
-const filterFunction = (filterby, videogames) => {
-  let filtered = [];
+const filterFunctionByGenreOrCreate = (filterby, videogames) => {
   if (filterby === "Por genero") {
-    filtered = videogames.sort((a, b) => {
-      const nameA = a.genres[0].name.toUpperCase();
-      const nameB = b.genres[0].name.toUpperCase();
+    videogames.sort((a, b) => {
+      const nameA = a.genres[0]?.name.toUpperCase();
+      const nameB = b.genres[0]?.name.toUpperCase();
       if (nameA < nameB) {
         return -1;
       }
@@ -12,9 +11,17 @@ const filterFunction = (filterby, videogames) => {
       }
       return 0;
     });
-  } else if (filterby === "Agregado por mi") {
-  } else if (filterby === "Orden A-Z") {
-    filtered = videogames.sort((a, b) => {
+  }
+  if (filterby === "Agregados por mi") {
+    videogames = videogames.filter((game) => typeof game.id === "string");
+  }
+
+  return videogames;
+};
+
+const filterFunctionByRatOrAlphabetic = (filterby, videogames) => {
+  if (filterby === "Orden A-Z") {
+    videogames.sort((a, b) => {
       const nameA = a.name.toUpperCase();
       const nameB = b.name.toUpperCase();
       if (nameA < nameB) {
@@ -26,7 +33,7 @@ const filterFunction = (filterby, videogames) => {
       return 0;
     });
   } else if (filterby === "Orden Z-A") {
-    filtered = videogames.sort((a, b) => {
+    videogames.sort((a, b) => {
       const nameA = a.name.toUpperCase();
       const nameB = b.name.toUpperCase();
       if (nameA < nameB) {
@@ -38,11 +45,11 @@ const filterFunction = (filterby, videogames) => {
       return 0;
     });
   } else if (filterby === "Rating 1-5") {
-    filtered = videogames.sort((a, b) => a.rating - b.rating);
+    videogames.sort((a, b) => a.rating - b.rating);
   } else {
-    filtered = videogames.sort((a, b) => b.rating - a.rating);
+    videogames.sort((a, b) => b.rating - a.rating);
   }
-  return filtered;
+  return videogames;
 };
 
-export { filterFunction };
+export { filterFunctionByGenreOrCreate, filterFunctionByRatOrAlphabetic };

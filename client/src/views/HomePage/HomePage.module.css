@@ -126,6 +126,15 @@
   border: none;
   padding: 15px;
 }
+.submitDisabledBtn {
+  border-radius: 12px;
+  margin-left: 15px;
+  background-color: #f3f3f3;
+  width: 80px;
+  border: none;
+  padding: 15px;
+}
+
 
 .submitBtn:hover {
   background-color: #93203c;

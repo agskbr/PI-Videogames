@@ -29,7 +29,8 @@ const getVideogamesByName = (name) => {
       dispatch({ type: GET_VIDEOGAMES_BY_NAME, payload: data });
       dispatch({ type: RECEIVED_POST });
     } catch (error) {
-      console.log(error);
+      console.log("Juego no encontrado");
+      dispatch({ type: RECEIVED_POST });
     }
   };
 };
@@ -41,7 +42,8 @@ const getVideogameById = (id) => {
       dispatch({ type: GET_VIDEOGAME_BY_ID, payload: data });
       dispatch({ type: RECEIVED_POST });
     } catch (error) {
-      console.log(error);
+      console.log("El juego que busca por id no existe");
+      dispatch({ type: RECEIVED_POST });
     }
   };
 };

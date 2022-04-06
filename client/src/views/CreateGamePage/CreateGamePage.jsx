@@ -12,7 +12,7 @@ import { validateForm } from "./utils/validateForm";
 import style from "./CreateGamePage.module.css";
 export default function CreateGamePage() {
   const dispatch = useDispatch();
-  const { genres, platforms, createdGame } = useSelector((state) => state);
+  const { genres, platforms } = useSelector((state) => state);
   const [inputs, setInputs] = useState({
     name: "",
     description: "",
@@ -36,8 +36,10 @@ export default function CreateGamePage() {
   }, [dispatch]);
 
   const handlerChange = (e) => {
-    setInputs({ ...inputs, [e.target.name]: e.target.value });
-    setErrors(validateForm({ ...inputs, [e.target.name]: e.target.value }));
+    const name = e.target.name;
+    const value = e.target.value;
+    setInputs({ ...inputs, [name]: value });
+    setErrors(validateForm({ ...inputs, [name]: value }));
   };
 
   const hanlderSubmit = (e) => {
@@ -59,10 +61,13 @@ export default function CreateGamePage() {
       dispatch(
         createVideogame({
           ...inputs,
-          genres: genresById,
-          platforms: platformsById,
+          rating: parseFloat(inputs.rating),
+          released: inputs.released.split("-").reverse().join("/"),
+          genres: [...genresById],
+          platforms: [...platformsById],
         })
       );
+
       setInputs({
         name: "",
         description: "",
@@ -204,7 +209,6 @@ export default function CreateGamePage() {
           </div>
           <div>
             <input
-              disabled={createdGame}
               className={style.submitBtn}
               type="submit"
               value="Crear juego"

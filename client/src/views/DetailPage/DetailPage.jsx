@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import notImage from "../../assets/not-image.svg";
+import notFound from "../../assets/404-image.svg";
 import {
   getVideogameById,
   requestPost,
@@ -17,10 +18,10 @@ export default function DetailPage({ gameId }) {
   }, [dispatch, gameId]);
   return isLoading ? (
     <div className={style.loadingVideogame}>{<Loader />}</div>
-  ) : (
+  ) : Object.values(videogame).length > 0 ? (
     <div>
       <div className={style.nameOfGame}>
-        <h2>{videogame.name || "Name of Game"}</h2>
+        <h2>{videogame.name}</h2>
       </div>
       <div className={style.cardContainer}>
         <div className={style.cardImage}>
@@ -37,7 +38,7 @@ export default function DetailPage({ gameId }) {
             <div className={style.ratingIcon}>
               <img src={ratingIcon} alt="star" />
             </div>
-            <span>{videogame.rating || "4.5"}</span>
+            <span>{videogame.rating}</span>
           </div>
         </div>
       </div>
@@ -68,6 +69,11 @@ export default function DetailPage({ gameId }) {
           </ul>
         </div>
       </div>
+    </div>
+  ) : (
+    <div className={style.notExistGame}>
+      <img src={notFound} alt="notFound" />
+      <div>Juego no encontrado</div>
     </div>
   );
 }

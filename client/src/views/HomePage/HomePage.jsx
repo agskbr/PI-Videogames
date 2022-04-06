@@ -4,7 +4,10 @@ import { Link } from "react-router-dom";
 import Videogame from "../../components/Videogame/Videogame.jsx";
 import style from "./HomePage.module.css";
 import FilterButton from "../../components/FilterButton/FilterButton.jsx";
-import { filterFunction } from "../../utils/filterFunction";
+import {
+  filterFunctionByGenreOrCreate,
+  filterFunctionByRatOrAlphabetic,
+} from "../../utils/filterFunction";
 import Loader from "../../components/Loader/Loader.jsx";
 import {
   getAllVideogames,
@@ -25,22 +28,56 @@ export default function HomePage() {
   });
   const dispatch = useDispatch();
   const { videogames, isLoading } = useSelector((state) => state);
+  const [displayVideogames, setDisplayVideogames] = useState([]);
   useEffect(() => {
     dispatch(requestPost());
     dispatch(getAllVideogames());
   }, [dispatch]);
+  useEffect(() => {
+    setDisplayVideogames([...videogames]);
+  }, [videogames]);
 
   const handlerChangeFilter = (e) => {
+    const name = e.target.name;
     const value = e.target.value;
-    setFilterBy({ ...filterBy, genreOrCreate: value });
-    filterFunction(value, videogames);
+    setFilterBy({ ...filterBy, [name]: value });
+    if (!filterBy.genreOrCreate && name === "alphabeticOrRating") {
+      const ArrayGamesByRatOrAlphabetic = filterFunctionByRatOrAlphabetic(
+        value,
+        [...videogames]
+      );
+      setDisplayVideogames(ArrayGamesByRatOrAlphabetic);
+    }
+    if (name === "genreOrCreate") {
+      const ArrayGamesByGenreOrCreate = filterFunctionByGenreOrCreate(value, [
+        ...videogames,
+      ]);
+      setDisplayVideogames(ArrayGamesByGenreOrCreate);
+      setCounterPage({ page: 1, resultsFrom: 0, resultsTo: 15 });
+    }
+    if (filterBy.genreOrCreate && name === "alphabeticOrRating") {
+      //Primero filtro por por: genero, creados por mi o todos
+      const ArrayGamesByGenreOrCreate = filterFunctionByGenreOrCreate(
+        filterBy.genreOrCreate,
+        [...videogames]
+      );
+
+      //A lo obtenido antes le hago el filtrado por rating, u orden alfabetico
+      const ArrayGamesByRatOrAlphabetic = filterFunctionByRatOrAlphabetic(
+        value,
+        [...ArrayGamesByGenreOrCreate]
+      );
+      setDisplayVideogames(ArrayGamesByRatOrAlphabetic);
+    }
   };
+
   return (
     <div>
       <h3>Bienvenido</h3>
       <form
         onSubmit={(event) => {
           event.preventDefault();
+          setCounterPage({ page: 1, resultsFrom: 0, resultsTo: 15 });
           dispatch(requestPost());
           dispatch(getVideogamesByName(searchInput.videogame));
         }}
@@ -58,20 +95,30 @@ export default function HomePage() {
           className={style.searchInput}
           placeholder="Buscar videojuego"
         />
-        <input className={style.submitBtn} type="submit" value="Buscar" />
+        <input
+          disabled={isLoading}
+          className={isLoading ? style.submitDisabledBtn : style.submitBtn}
+          type="submit"
+          value="Buscar"
+        />
       </form>
       <div>
         <h4>Puedes filtrar los juegos</h4>
         <div className={style.filtersContainer}>
           <FilterButton
+            name="genreOrCreate"
+            disabled={isLoading}
             labelGroup="Filtrar por"
             options={[
               { id: 1, name: "Por genero" },
-              { id: 2, name: "Agregado por mi" },
+              { id: 2, name: "Agregados por mi" },
+              { id: 3, name: "Todos" },
             ]}
             onChange={handlerChangeFilter}
           />
           <FilterButton
+            name="alphabeticOrRating"
+            disabled={isLoading}
             labelGroup="Filtrar por"
             options={[
               { id: 1, name: "Orden A-Z" },
@@ -90,10 +137,10 @@ export default function HomePage() {
         <div className={style.gamesContainer}>
           {isLoading ? (
             <div className={style.loadingHomepage}>{<Loader />}</div>
-          ) : typeof videogames === "string" ? (
+          ) : !Array.isArray(videogames) ? (
             <div className={style.gamesContainer}>El juego no existe</div>
           ) : (
-            videogames
+            displayVideogames
               .slice(counterPage.resultsFrom, counterPage.resultsTo)
               .map((game) => (
                 <Link
@@ -137,7 +184,7 @@ export default function HomePage() {
         <button
           disabled={
             isLoading ||
-            videogames.slice(
+            displayVideogames.slice(
               counterPage.resultsFrom + 15,
               counterPage.resultsTo + 15
             ).length === 0
@@ -152,7 +199,7 @@ export default function HomePage() {
           }}
           className={
             isLoading ||
-            videogames.slice(
+            displayVideogames.slice(
               counterPage.resultsFrom + 15,
               counterPage.resultsTo + 15
             ).length === 0
