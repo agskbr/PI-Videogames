@@ -23,6 +23,7 @@ const genresController = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    res.json({ error: "Algo salio mal, comprueba tu conexion a internet" });
   }
 };
 

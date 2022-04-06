@@ -14,7 +14,6 @@ module.exports = (sequelize) => {
         allowNull: false,
       },
     },
-    { createdAt: false },
-    { tableName: "genres" }
+    { createdAt: false, updatedAt: false }
   );
 };
