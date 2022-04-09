@@ -6,8 +6,16 @@ export default function FilterButton({
   name,
   labelGroup,
   disabled,
+  onClick,
 }) {
-  return (
+  return name === "filterByGenre" ? (
+    <button disabled={disabled} onClick={onClick} className={style.filterCard}>
+      <div className={style.filterCard}>
+        <span>Filtrar por</span>
+        <span>+</span>
+      </div>
+    </button>
+  ) : (
     <div>
       <select
         disabled={disabled}
@@ -16,7 +24,9 @@ export default function FilterButton({
         onChange={onChange}
       >
         <optgroup label={labelGroup}>
-          <option hidden>Selecciona algo</option>
+          <option className={style.hiddenOption} hidden>
+            Selecciona algo
+          </option>
           {Array.isArray(options) ? (
             options.map((option) => (
               <option key={option.id}>{option.name}</option>

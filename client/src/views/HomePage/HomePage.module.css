@@ -16,7 +16,7 @@
 .addVideogameCard {
   width: 100%;
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   align-items: center;
 }
 .addVideogameCard button {
@@ -135,10 +135,10 @@
   padding: 15px;
 }
 
-
 .submitBtn:hover {
   background-color: #93203c;
   cursor: pointer;
   color: white;
   transition: all 200ms ease-in-out;
 }
+

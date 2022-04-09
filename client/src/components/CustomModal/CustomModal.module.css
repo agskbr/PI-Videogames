@@ -1,0 +1,66 @@
+.modalDialog {
+  border: none;
+  width: 40vw;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+}
+.modalHeader span {
+  font-family: sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.closeButton {
+  background-color: #f3f3f3;
+  border: none;
+  border-radius: 4px;
+  align-items: center;
+  font-weight: 600;
+  padding: 10px;
+}
+.closeButton:hover {
+  background-color: #93203c;
+  cursor: pointer;
+  color: white;
+}
+.closeButton:focus {
+  outline: none;
+}
+.genresContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 10px;
+}
+
+.eachInput {
+  display: flex;
+  justify-content: center;
+  width: 200px;
+  padding-top: 5px;
+  align-items: center;
+}
+
+.eachInput label {
+  width: 100px;
+  padding-right: 20px;
+}
+.filterBtnContainer {
+  display: flex;
+  justify-content: space-between;
+}
+.filterBtn {
+  background-color: #93203c;
+  font-family: sans-serif;
+  font-weight: 600;
+  color: white;
+  border-radius: 4px;
+  padding: 10px;
+  border: none;
+}
+.filterBtn:hover {
+  cursor: pointer;
+}

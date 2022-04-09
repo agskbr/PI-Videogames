@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
-import notImage from "../../assets/not-image.svg";
-import notFound from "../../assets/404-image.svg";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getVideogameById,
   requestPost,
 } from "../../store/actions/videogame_actions";
-import ratingIcon from "../../assets/rating-icon.png";
 import style from "./DetailPage.module.css";
-import { useDispatch, useSelector } from "react-redux";
+import notImage from "../../assets/not-image.svg";
+import ratingIcon from "../../assets/rating-icon.png";
+import NotFound404 from "../../components/NotFound404/NotFound404";
 import Loader from "../../components/Loader/Loader";
 export default function DetailPage({ gameId }) {
   const dispatch = useDispatch();
@@ -43,7 +43,9 @@ export default function DetailPage({ gameId }) {
         </div>
       </div>
       <div className={style.descriptionContainer}>
-        <div className={style.description}>{videogame.description}</div>
+        <div className={style.description}>
+          {videogame.description.replaceAll(/<\/?[a-z](. \/)?>/g, "")}
+        </div>
       </div>
       <div className={style.platforms}>
         <div>
@@ -71,9 +73,6 @@ export default function DetailPage({ gameId }) {
       </div>
     </div>
   ) : (
-    <div className={style.notExistGame}>
-      <img src={notFound} alt="notFound" />
-      <div>Juego no encontrado</div>
-    </div>
+    <NotFound404 search="Juego" />
   );
 }

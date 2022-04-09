@@ -1,4 +1,5 @@
 import axios from "axios";
+import { base_url } from "../utils";
 import {
   GET_VIDEOGAMES,
   REQUEST_POST,
@@ -7,8 +8,6 @@ import {
   GET_VIDEOGAME_BY_ID,
   CREATE_VIDEOGAME,
 } from "../action-types/types";
-
-const base_url = "http://localhost:3001";
 
 const getAllVideogames = () => {
   return async (dispatch) => {

@@ -1,6 +1,6 @@
-const axios = require("axios");
-const { GET_PLATFORMS, RECEIVED_POST } = require("../action-types/types");
-const base_url = "http://localhost:3001";
+import { base_url } from "../utils";
+import axios from "axios";
+import { GET_PLATFORMS, RECEIVED_POST } from "../action-types/types";
 
 const getPlatforms = () => {
   return async (dispatch) => {
@@ -9,9 +9,10 @@ const getPlatforms = () => {
       dispatch({ type: GET_PLATFORMS, payload: data });
       dispatch({ type: RECEIVED_POST });
     } catch (error) {
+      console.log("No se pudo traer las plataformas");
       console.log(error);
     }
   };
 };
 
-module.exports = { getPlatforms };
+export { getPlatforms };

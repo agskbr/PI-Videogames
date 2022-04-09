@@ -3,19 +3,36 @@
   background-color: #f3f3f3;
   height: 50px;
   width: 180px;
+  font-family: sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: gray;
   display: flex;
   justify-content: space-between;
   border-radius: 8px;
   align-items: center;
-  padding-left: 8px;
+  padding-left: 10px;
+  padding-right: 10px;
   user-select: none;
   border: none;
 }
-
 .filterCard:hover {
   cursor: pointer;
 }
 
 .filterCard:focus {
   outline: none;
+}
+
+.filterCard span {
+  font-weight: 600;
+  font-size: 12px;
+  font-family: sans-serif;
+  color: gray;
+}
+
+.hiddenOption {
+  font-weight: 600;
+  font-size: 12px;
+  color: gray;
 }

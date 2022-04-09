@@ -33,7 +33,7 @@
 .principalRatingContainer {
   display: flex;
   margin-top: 10px;
-  justify-content: end;
+  justify-content: flex-end;
 }
 
 .principalRatingContainer h5 {

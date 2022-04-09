@@ -5,7 +5,8 @@ import Videogame from "../../components/Videogame/Videogame.jsx";
 import style from "./HomePage.module.css";
 import FilterButton from "../../components/FilterButton/FilterButton.jsx";
 import {
-  filterFunctionByGenreOrCreate,
+  filterByGenres,
+  filterFunctionByAllOrCreate,
   filterFunctionByRatOrAlphabetic,
 } from "../../utils/filterFunction";
 import Loader from "../../components/Loader/Loader.jsx";
@@ -14,10 +15,13 @@ import {
   getVideogamesByName,
   requestPost,
 } from "../../store/actions/videogame_actions";
+import { getGenres } from "../../store/actions/genres-actions";
+import CustomModal from "../../components/CustomModal/CustomModal.jsx";
 
 export default function HomePage() {
   const [filterBy, setFilterBy] = useState({
-    genreOrCreate: "",
+    allOrCreate: "",
+    filterByGenre: [],
     alphabeticOrRating: "",
   });
   const [searchInput, setSearchInput] = useState({ videogame: "" });
@@ -27,12 +31,14 @@ export default function HomePage() {
     resultsTo: 15,
   });
   const dispatch = useDispatch();
-  const { videogames, isLoading } = useSelector((state) => state);
+  const { videogames, isLoading, genres } = useSelector((state) => state);
   const [displayVideogames, setDisplayVideogames] = useState([]);
   useEffect(() => {
     dispatch(requestPost());
     dispatch(getAllVideogames());
+    dispatch(getGenres());
   }, [dispatch]);
+
   useEffect(() => {
     setDisplayVideogames([...videogames]);
   }, [videogames]);
@@ -41,31 +47,42 @@ export default function HomePage() {
     const name = e.target.name;
     const value = e.target.value;
     setFilterBy({ ...filterBy, [name]: value });
-    if (!filterBy.genreOrCreate && name === "alphabeticOrRating") {
+    if (!filterBy.allOrCreate && name === "alphabeticOrRating") {
       const ArrayGamesByRatOrAlphabetic = filterFunctionByRatOrAlphabetic(
         value,
-        [...videogames]
+        [...displayVideogames]
       );
       setDisplayVideogames(ArrayGamesByRatOrAlphabetic);
     }
-    if (name === "genreOrCreate") {
-      const ArrayGamesByGenreOrCreate = filterFunctionByGenreOrCreate(value, [
-        ...videogames,
+    if (name === "allOrCreate") {
+      const ArrayGamesByAllOrCreate = filterFunctionByAllOrCreate(value, [
+        ...displayVideogames,
       ]);
-      setDisplayVideogames(ArrayGamesByGenreOrCreate);
+      setDisplayVideogames(ArrayGamesByAllOrCreate);
       setCounterPage({ page: 1, resultsFrom: 0, resultsTo: 15 });
     }
-    if (filterBy.genreOrCreate && name === "alphabeticOrRating") {
+    if (value === "Todos") {
+      if (filterBy.filterByGenre.length) {
+        const filteredByGenresArr = filterByGenres(filterBy.filterByGenre, [
+          ...videogames,
+        ]);
+        setDisplayVideogames([...filteredByGenresArr]);
+      } else {
+        setDisplayVideogames([...videogames]);
+      }
+      setCounterPage({ page: 1, resultsFrom: 0, resultsTo: 15 });
+    }
+    if (filterBy.allOrCreate && name === "alphabeticOrRating") {
       //Primero filtro por por: genero, creados por mi o todos
-      const ArrayGamesByGenreOrCreate = filterFunctionByGenreOrCreate(
-        filterBy.genreOrCreate,
-        [...videogames]
+      const ArrayGamesByAllOrCreate = filterFunctionByAllOrCreate(
+        filterBy.allOrCreate,
+        [...displayVideogames]
       );
 
       //A lo obtenido antes le hago el filtrado por rating, u orden alfabetico
       const ArrayGamesByRatOrAlphabetic = filterFunctionByRatOrAlphabetic(
         value,
-        [...ArrayGamesByGenreOrCreate]
+        [...ArrayGamesByAllOrCreate]
       );
       setDisplayVideogames(ArrayGamesByRatOrAlphabetic);
     }
@@ -73,7 +90,7 @@ export default function HomePage() {
 
   return (
     <div>
-      <h3>Bienvenido</h3>
+      <h2>Bienvenido</h2>
       <form
         onSubmit={(event) => {
           event.preventDefault();
@@ -103,18 +120,26 @@ export default function HomePage() {
         />
       </form>
       <div>
-        <h4>Puedes filtrar los juegos</h4>
+        <h5>Puedes filtrar los juegos</h5>
         <div className={style.filtersContainer}>
           <FilterButton
-            name="genreOrCreate"
+            name="allOrCreate"
             disabled={isLoading}
             labelGroup="Filtrar por"
             options={[
-              { id: 1, name: "Por genero" },
               { id: 2, name: "Agregados por mi" },
               { id: 3, name: "Todos" },
             ]}
             onChange={handlerChangeFilter}
+          />
+          <FilterButton
+            options={genres}
+            name="filterByGenre"
+            onClick={() => {
+              document.getElementById("dialogId").showModal();
+            }}
+            labelGroup="Filtrar por"
+            disabled={isLoading}
           />
           <FilterButton
             name="alphabeticOrRating"
@@ -127,6 +152,11 @@ export default function HomePage() {
               { id: 4, name: "Rating 5-1" },
             ]}
             onChange={handlerChangeFilter}
+          />
+          <CustomModal
+            setDisplayGames={setDisplayVideogames}
+            genres={genres}
+            setFilterBy={setFilterBy}
           />
         </div>
         <div className={style.addVideogameCard}>

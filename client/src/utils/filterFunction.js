@@ -1,22 +1,8 @@
-const filterFunctionByGenreOrCreate = (filterby, videogames) => {
-  if (filterby === "Por genero") {
-    videogames.sort((a, b) => {
-      const nameA = a.genres[0]?.name.toUpperCase();
-      const nameB = b.genres[0]?.name.toUpperCase();
-      if (nameA < nameB) {
-        return -1;
-      }
-      if (nameA > nameB) {
-        return 1;
-      }
-      return 0;
-    });
-  }
+const filterFunctionByAllOrCreate = (filterby, videogames) => {
   if (filterby === "Agregados por mi") {
     videogames = videogames.filter((game) => typeof game.id === "string");
+    return videogames;
   }
-
-  return videogames;
 };
 
 const filterFunctionByRatOrAlphabetic = (filterby, videogames) => {
@@ -52,4 +38,28 @@ const filterFunctionByRatOrAlphabetic = (filterby, videogames) => {
   return videogames;
 };
 
-export { filterFunctionByGenreOrCreate, filterFunctionByRatOrAlphabetic };
+const filterByGenres = (genresToFilter, videogames) => {
+  if (genresToFilter.length) {
+    let isMatch = {};
+    for (let i = 0; i < videogames.length; i++) {
+      let matchesCounter = 0;
+      isMatch[videogames[i].name] = false;
+      for (let index = 0; index < videogames[i].genres.length; index++) {
+        if (genresToFilter.includes(videogames[i].genres[index].name)) {
+          matchesCounter++;
+        }
+      }
+      if (matchesCounter === genresToFilter.length) {
+        isMatch[videogames[i].name] = true;
+      }
+    }
+    videogames = videogames.filter((game) => isMatch[game.name]);
+  }
+  return videogames;
+};
+
+export {
+  filterFunctionByAllOrCreate,
+  filterFunctionByRatOrAlphabetic,
+  filterByGenres,
+};

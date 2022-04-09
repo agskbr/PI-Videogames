@@ -130,19 +130,23 @@ export default function CreateGamePage() {
             labelError={errors.name}
           />
           <label>Descripcion del juego</label>
-          <CustomInput
-            type="text"
-            value={inputs.description}
-            name="description"
-            onChange={handlerChange}
-            placeholder="Descripcion del juego que deseemos agregar"
-            htmlFor="description"
-            labelError={errors.description}
-          />
+          <div className={style.textAreaContainer}>
+            <textarea
+              className={style.textAreaDescription}
+              name="description"
+              value={inputs.description}
+              rows="10"
+              placeholder="Aqui va la descripcion"
+              onChange={handlerChange}
+            />
+            <label htmlFor="description">{errors.description}</label>
+          </div>
           <label>Fecha de lanzamiento</label>
           <CustomInput
             type="date"
             name="released"
+            min="1900-01-01"
+            max="2030-12-31"
             value={inputs.released}
             htmlFor="released"
             onChange={handlerChange}
