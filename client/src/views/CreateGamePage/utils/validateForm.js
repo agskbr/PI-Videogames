@@ -1,5 +1,6 @@
 const validateForm = (inputs) => {
   let errors = {};
+
   if (!inputs.name) {
     errors.name = "El nombre es obligatorio";
   }

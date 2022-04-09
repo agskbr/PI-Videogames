@@ -4,13 +4,27 @@ const fs = require("fs");
 const path = require("path");
 const { DB_USER, DB_PASSWORD, DB_HOST } = process.env;
 
-const sequelize = new Sequelize(
-  `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/videogames`,
-  {
-    logging: false, // set to console.log to see the raw SQL queries
-    native: false, // lets Sequelize know we can use pg-native for ~30% more speed
-  }
-);
+// const sequelize = new Sequelize(
+//   `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/videogames`,
+//   {
+//     logging: false, // set to console.log to see the raw SQL queries
+//     native: false, // lets Sequelize know we can use pg-native for ~30% more speed
+//     );
+//   }
+const sequelize = new Sequelize({
+  database: "d82a70gi23m2uv",
+  username: "qojbezbbeovosr",
+  password: "93b40ca56d8c655a3e11af316e705b2a690dfd68e6e273ab80127cb854e9f036",
+  host: "ec2-3-230-122-20.compute-1.amazonaws.com",
+  port: 5432,
+  dialect: "postgres",
+  dialectOptions: {
+    ssl: {
+      require: true, // This will help you. But you will see nwe error
+      rejectUnauthorized: false, // This line will fix new error
+    },
+  },
+});
 const basename = path.basename(__filename);
 
 const modelDefiners = [];
