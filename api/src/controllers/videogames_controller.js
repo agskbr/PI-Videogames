@@ -57,15 +57,27 @@ const videogamesController = async (req, res) => {
       }
     } else {
       //Si no me pasan la query, me piden todos los juegos (devuelvo solo 100)
-      let { data } = await axios.get(`${baseUrl}/games?key=${API_KEY}`);
-      // La api me devuelve de a 20 juegos, uso la propiedad next del objeto que me devulve para pedir la siguiente pag
-      while (result.length < 100) {
-        result = [...result, ...data.results];
-        let nextData = await axios.get(data.next);
-        console.log("cambio de pagina");
-        data = nextData.data;
-      }
+      // let { data } = await axios.get(`${baseUrl}/games?key=${API_KEY}`);
+      // // La api me devuelve de a 20 juegos, uso la propiedad next del objeto que me devulve para pedir la siguiente pag
+      // while (result.length < 100) {
+      //   result = [...result, ...data.results];
+      //   let nextData = await axios.get(data.next);
+      //   console.log("cambio de pagina");
+      //   data = nextData.data;
+      // }
+
       //Para optmizar los tiempos de respuesta agrego este promise all
+      const promisesArr = await Promise.all([
+        axios.get(`${baseUrl}/games?key=${API_KEY}`),
+        axios.get(`${baseUrl}/games?key=${API_KEY}&page=2`),
+        axios.get(`${baseUrl}/games?key=${API_KEY}&page=3`),
+        axios.get(`${baseUrl}/games?key=${API_KEY}&page=4`),
+        axios.get(`${baseUrl}/games?key=${API_KEY}&page=5`),
+      ]);
+
+      promisesArr.forEach(({ data }) => {
+        result = [...result, ...data.results];
+      });
 
       try {
         //Obtengo los juegos de la base de datos
