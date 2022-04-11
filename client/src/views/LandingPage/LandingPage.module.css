@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: center;
   background-color: #ffffff;
-  background-image: url("../../assets/videogame.png");
+  background-image: url("../../assets/landing-background.svg");
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;
@@ -14,6 +14,8 @@
   width: 200px;
   height: 60px;
   border: none;
+  border-radius: 12px;
+  font-family: sans-serif;
   cursor: pointer;
   box-shadow: 8px 10px 20px black;
   font-weight: 700;
@@ -25,4 +27,16 @@
   color: white;
 }
 
-
+@media screen and (max-width: 650px) {
+  .toHomeButton {
+    width: 140px;
+    height: 45px;
+    font-size: 12px;
+    background-color: #93203c;
+    font-family: sans-serif;
+    color: white;
+  }
+  .principalContainer {
+    object-fit: cover;
+  }
+}

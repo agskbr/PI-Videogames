@@ -4,11 +4,6 @@ import { Link } from "react-router-dom";
 import Videogame from "../../components/Videogame/Videogame.jsx";
 import style from "./HomePage.module.css";
 import FilterButton from "../../components/FilterButton/FilterButton.jsx";
-import {
-  filterByGenres,
-  filterFunctionByAllOrCreate,
-  filterFunctionByRatOrAlphabetic,
-} from "../../utils/filterFunction";
 import Loader from "../../components/Loader/Loader.jsx";
 import {
   getAllVideogames,
@@ -17,6 +12,8 @@ import {
 } from "../../store/actions/videogame_actions";
 import { getGenres } from "../../store/actions/genres-actions";
 import CustomModal from "../../components/CustomModal/CustomModal.jsx";
+import { handlerChangeFilter } from "./utils/handlerChangeFilter";
+import CustomPageController from "../../components/CustomPageController/CustomPageController.jsx";
 
 export default function HomePage() {
   const [filterBy, setFilterBy] = useState({
@@ -40,53 +37,16 @@ export default function HomePage() {
   }, [dispatch]);
 
   useEffect(() => {
-    setDisplayVideogames([...videogames]);
+    if (Array.isArray(videogames)) {
+      setDisplayVideogames([...videogames]);
+    } else {
+      setDisplayVideogames([]);
+    }
   }, [videogames]);
 
-  const handlerChangeFilter = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    setFilterBy({ ...filterBy, [name]: value });
-    if (!filterBy.allOrCreate && name === "alphabeticOrRating") {
-      const ArrayGamesByRatOrAlphabetic = filterFunctionByRatOrAlphabetic(
-        value,
-        [...displayVideogames]
-      );
-      setDisplayVideogames(ArrayGamesByRatOrAlphabetic);
-    }
-    if (name === "allOrCreate") {
-      const ArrayGamesByAllOrCreate = filterFunctionByAllOrCreate(value, [
-        ...displayVideogames,
-      ]);
-      setDisplayVideogames(ArrayGamesByAllOrCreate);
-      setCounterPage({ page: 1, resultsFrom: 0, resultsTo: 15 });
-    }
-    if (value === "Todos") {
-      if (filterBy.filterByGenre.length) {
-        const filteredByGenresArr = filterByGenres(filterBy.filterByGenre, [
-          ...videogames,
-        ]);
-        setDisplayVideogames([...filteredByGenresArr]);
-      } else {
-        setDisplayVideogames([...videogames]);
-      }
-      setCounterPage({ page: 1, resultsFrom: 0, resultsTo: 15 });
-    }
-    if (filterBy.allOrCreate && name === "alphabeticOrRating") {
-      //Primero filtro por por: genero, creados por mi o todos
-      const ArrayGamesByAllOrCreate = filterFunctionByAllOrCreate(
-        filterBy.allOrCreate,
-        [...displayVideogames]
-      );
-
-      //A lo obtenido antes le hago el filtrado por rating, u orden alfabetico
-      const ArrayGamesByRatOrAlphabetic = filterFunctionByRatOrAlphabetic(
-        value,
-        [...ArrayGamesByAllOrCreate]
-      );
-      setDisplayVideogames(ArrayGamesByRatOrAlphabetic);
-    }
-  };
+  useEffect(() => {
+    setCounterPage({ page: 1, resultsFrom: 0, resultsTo: 15 });
+  }, [displayVideogames]);
 
   return (
     <div>
@@ -94,30 +54,31 @@ export default function HomePage() {
       <form
         onSubmit={(event) => {
           event.preventDefault();
-          setCounterPage({ page: 1, resultsFrom: 0, resultsTo: 15 });
           dispatch(requestPost());
           dispatch(getVideogamesByName(searchInput.videogame));
         }}
       >
-        <input
-          disabled={isLoading}
-          onChange={(event) =>
-            setSearchInput((state) => ({
-              ...state,
-              videogame: event.target.value,
-            }))
-          }
-          value={searchInput.videogame}
-          type="search"
-          className={style.searchInput}
-          placeholder="Buscar videojuego"
-        />
-        <input
-          disabled={isLoading}
-          className={isLoading ? style.submitDisabledBtn : style.submitBtn}
-          type="submit"
-          value="Buscar"
-        />
+        <div className={style.searchBarAndBtn}>
+          <input
+            disabled={isLoading}
+            onChange={(event) =>
+              setSearchInput((state) => ({
+                ...state,
+                videogame: event.target.value,
+              }))
+            }
+            value={searchInput.videogame}
+            type="search"
+            className={style.searchInput}
+            placeholder="Buscar videojuego"
+          />
+          <input
+            disabled={isLoading}
+            className={isLoading ? style.submitDisabledBtn : style.submitBtn}
+            type="submit"
+            value="Buscar"
+          />
+        </div>
       </form>
       <div>
         <h5>Puedes filtrar los juegos</h5>
@@ -130,17 +91,18 @@ export default function HomePage() {
               { id: 2, name: "Agregados por mi" },
               { id: 3, name: "Todos" },
             ]}
-            onChange={handlerChangeFilter}
-          />
-          <FilterButton
-            options={genres}
-            name="filterByGenre"
-            onClick={() => {
-              document.getElementById("dialogId").showModal();
+            onChange={(event) => {
+              handlerChangeFilter(
+                event,
+                setFilterBy,
+                filterBy,
+                videogames,
+                setDisplayVideogames,
+                displayVideogames
+              );
             }}
-            labelGroup="Filtrar por"
-            disabled={isLoading}
           />
+
           <FilterButton
             name="alphabeticOrRating"
             disabled={isLoading}
@@ -151,23 +113,44 @@ export default function HomePage() {
               { id: 3, name: "Rating 1-5" },
               { id: 4, name: "Rating 5-1" },
             ]}
-            onChange={handlerChangeFilter}
+            onChange={(event) => {
+              handlerChangeFilter(
+                event,
+                setFilterBy,
+                filterBy,
+                videogames,
+                setDisplayVideogames,
+                displayVideogames
+              );
+            }}
           />
+
+          <FilterButton
+            options={genres}
+            name="filterByGenre"
+            onClick={() => {
+              document.getElementById("dialogId").showModal();
+            }}
+            labelGroup="Filtrar por"
+            disabled={isLoading}
+          />
+
           <CustomModal
+            displayGames={displayVideogames}
             setDisplayGames={setDisplayVideogames}
             genres={genres}
             setFilterBy={setFilterBy}
           />
         </div>
         <div className={style.addVideogameCard}>
-          <Link to="/videogame/create">
+          <Link className={style.linkStyle} to="/videogame/create">
             <button>Agregar Juego</button>
           </Link>
         </div>
         <div className={style.gamesContainer}>
           {isLoading ? (
             <div className={style.loadingHomepage}>{<Loader />}</div>
-          ) : !Array.isArray(videogames) ? (
+          ) : displayVideogames.length < 1 ? (
             <div className={style.gamesContainer}>El juego no existe</div>
           ) : (
             displayVideogames
@@ -189,57 +172,12 @@ export default function HomePage() {
           )}
         </div>
       </div>
-      <div className={style.pageControllerContainer}>
-        <button
-          disabled={isLoading || counterPage.page === 1}
-          onClick={() => {
-            if (counterPage.page > 1) {
-              setCounterPage({
-                ...counterPage,
-                page: counterPage.page - 1,
-                resultsFrom: counterPage.resultsFrom - 15,
-                resultsTo: counterPage.resultsTo - 15,
-              });
-            }
-          }}
-          className={
-            isLoading || counterPage.page === 1
-              ? style.pageControllerDisabled
-              : style.pageController
-          }
-        >
-          {"<"}
-        </button>
-        <p>{counterPage.page}</p>
-        <button
-          disabled={
-            isLoading ||
-            displayVideogames.slice(
-              counterPage.resultsFrom + 15,
-              counterPage.resultsTo + 15
-            ).length === 0
-          }
-          onClick={() => {
-            setCounterPage({
-              ...counterPage,
-              page: counterPage.page + 1,
-              resultsFrom: counterPage.resultsFrom + 15,
-              resultsTo: counterPage.resultsTo + 15,
-            });
-          }}
-          className={
-            isLoading ||
-            displayVideogames.slice(
-              counterPage.resultsFrom + 15,
-              counterPage.resultsTo + 15
-            ).length === 0
-              ? style.pageControllerDisabled
-              : style.pageController
-          }
-        >
-          {">"}
-        </button>
-      </div>
+      <CustomPageController
+        counterPage={counterPage}
+        setCounterPage={setCounterPage}
+        displayVideogames={displayVideogames}
+        isLoading={isLoading}
+      />
     </div>
   );
 }

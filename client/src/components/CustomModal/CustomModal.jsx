@@ -3,7 +3,12 @@ import { useSelector } from "react-redux";
 import { filterByGenres } from "../../utils/filterFunction";
 import style from "./CustomModal.module.css";
 
-export default function CustomModal({ genres, setDisplayGames, setFilterBy }) {
+export default function CustomModal({
+  genres,
+  setDisplayGames,
+  setFilterBy,
+  displayGames,
+}) {
   const [isSelected, setIsSelected] = useState({});
   const { videogames } = useSelector((state) => state);
 
@@ -47,7 +52,13 @@ export default function CustomModal({ genres, setDisplayGames, setFilterBy }) {
         ))}
       </div>
       <div className={style.filterBtnContainer}>
-        <button onClick={() => setIsSelected({})} className={style.filterBtn}>
+        <button
+          onClick={() => {
+            setIsSelected({});
+            setFilterBy((state) => ({ ...state, filterByGenre: [] }));
+          }}
+          className={style.filterBtn}
+        >
           Borrar filtros
         </button>
 
@@ -60,14 +71,22 @@ export default function CustomModal({ genres, setDisplayGames, setFilterBy }) {
                 genresSelected.push(genre.toString());
               }
             }
+            if (!genresSelected.length) {
+              document.getElementById("dialogId").close();
+              if (!Array.isArray(videogames)) {
+                return setDisplayGames([]);
+              }
+              return setDisplayGames([...videogames]);
+            }
             setFilterBy((state) => ({
               ...state,
               filterByGenre: [...genresSelected],
             }));
             const filteredByGenreArr = filterByGenres(
               genresSelected,
-              videogames
+              displayGames
             );
+
             setDisplayGames([...filteredByGenreArr]);
             document.getElementById("dialogId").close();
           }}

@@ -132,10 +132,10 @@ export default function CreateGamePage() {
           <label>Descripcion del juego</label>
           <div className={style.textAreaContainer}>
             <textarea
+              rows="10"
               className={style.textAreaDescription}
               name="description"
               value={inputs.description}
-              rows="10"
               placeholder="Aqui va la descripcion"
               onChange={handlerChange}
             />

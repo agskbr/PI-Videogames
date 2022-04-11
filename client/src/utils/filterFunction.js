@@ -1,8 +1,11 @@
 const filterFunctionByAllOrCreate = (filterby, videogames) => {
   if (filterby === "Agregados por mi") {
     videogames = videogames.filter((game) => typeof game.id === "string");
-    return videogames;
   }
+  if (!Array.isArray(videogames)) {
+    return [];
+  }
+  return videogames;
 };
 
 const filterFunctionByRatOrAlphabetic = (filterby, videogames) => {

@@ -47,6 +47,7 @@
 .description {
   width: 70vw;
   text-align: justify;
+  font-family: sans-serif;
 }
 
 .relAndRatContainer {
@@ -109,3 +110,28 @@
   color: grey;
 }
 
+@media screen and (max-width: 650px) {
+  h2 {
+    font-size: 14px;
+  }
+  .released {
+    font-size: 13px;
+  }
+  .releasedDate {
+    font-size: 13px;
+  }
+  .rating {
+    font-size: 13px;
+  }
+
+  .description {
+    font-size: 12px;
+    font-family: sans-serif;
+  }
+  .platforms {
+    font-size: 12px;
+  }
+  .platforms div ul li {
+    font-size: 10px;
+  }
+}

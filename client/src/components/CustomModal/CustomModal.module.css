@@ -64,3 +64,14 @@
 .filterBtn:hover {
   cursor: pointer;
 }
+
+@media screen and (max-width: 650px) {
+  .modalDialog {
+    width: 50vw;
+  }
+  .filterBtn {
+    margin-top: 20px;
+    width: 60px;
+    font-size: 10px;
+  }
+}

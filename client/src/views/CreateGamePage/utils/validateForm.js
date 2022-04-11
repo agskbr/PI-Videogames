@@ -17,7 +17,7 @@ const validateForm = (inputs) => {
   if (inputs.rating.length < 1) {
     errors.rating = "El rating es requerido";
   } else if (!/^[0-4]\.?\d{0,2}$|^5\.?0{0,2}$/.test(inputs.rating)) {
-    errors.rating = "Rating solo de 1-5 o con un decimal";
+    errors.rating = "Rating solo de 1-5 o con dos decimales";
   } else if (
     !inputs.rating.includes(".") &&
     inputs.rating.split("").length > 1

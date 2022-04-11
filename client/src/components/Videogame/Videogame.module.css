@@ -64,3 +64,27 @@
   width: 15px;
   height: 15px;
 }
+
+@media screen and (max-width: 650px) {
+  .cardGame {
+    width: 150px;
+  }
+  .cardGame img {
+    width: 80px;
+    height: 100px;
+  }
+  .starIconContainer img {
+    width: 10px;
+    height: 10px;
+  }
+  .nameContainer h3 {
+    font-size: 14px;
+  }
+  .principalRatingContainer h5 {
+    font-size: 10px;
+  }
+  .rating {
+    height: 25px;
+    width: 50px;
+  }
+}
