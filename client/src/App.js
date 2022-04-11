@@ -12,7 +12,12 @@ function App() {
 
       <Route
         path="/videogame/detail/:gameId"
-        render={({ match }) => <DetailPage gameId={match.params.gameId} />}
+        render={(routeProps) => (
+          <DetailPage
+            state={routeProps.location.state}
+            gameId={routeProps.match.params.gameId}
+          />
+        )}
       />
       <Route path="/videogame/create" component={CreateGamePage} />
     </div>

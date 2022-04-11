@@ -3,6 +3,7 @@
   margin: 10px;
   width: 300px;
   border-radius: 12px;
+  transition: all 200ms ease;
 }
 .cardGame img {
   width: 80%;
@@ -11,13 +12,9 @@
   user-select: none;
   border-radius: 10px;
 }
-
-.cardGame:hover {
-  cursor: pointer;
-  background-color: whitesmoke;
-  transform: scale(1.02);
-  transition: all 200ms ease-in-out;
-  box-shadow: 8px 5px 25px rgba(0, 0, 0, 0.535);
+.linkToDetail {
+  text-decoration: none;
+  color: black;
 }
 
 .nameContainer {
@@ -29,11 +26,53 @@
   height: 60px;
   padding-bottom: 15px;
 }
+.headCard {
+  padding-bottom: 10px;
+}
+.headCard:hover {
+  cursor: pointer;
+  background-color: whitesmoke;
+  border-radius: 12px;
+  transform: scale(1.02);
+  transition: all 200ms ease-out;
+  box-shadow: 8px 5px 25px rgba(0, 0, 0, 0.535);
+}
 
 .principalRatingContainer {
   display: flex;
   margin-top: 10px;
-  justify-content: flex-end;
+  justify-content: space-between;
+}
+.unlikedButton {
+  margin-left: 20px;
+  width: 32px;
+  border: none;
+  width: 32px;
+  display: flex;
+  background-image: url("../../assets/like-icon.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+}
+.unlikedButton:hover {
+  cursor: pointer;
+}
+.likedButton:hover {
+  cursor: pointer;
+}
+.likedButton {
+  margin-left: 20px;
+  width: 32px;
+  border: none;
+  width: 32px;
+  display: flex;
+  background-image: url("../../assets/like-filled-icon.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  justify-content: center;
+  align-items: center;
 }
 
 .principalRatingContainer h5 {
@@ -86,5 +125,19 @@
   .rating {
     height: 25px;
     width: 50px;
+  }
+  .unlikedButton {
+    width: 16px;
+    height: 16px;
+  }
+  .likedButton {
+    width: 16px;
+    height: 16px;
+  }
+  .headCard:hover {
+    cursor: none;
+    border-radius: 12px;
+    transition: none;
+    box-shadow: none;
   }
 }

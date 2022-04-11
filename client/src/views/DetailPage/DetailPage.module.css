@@ -12,9 +12,9 @@
 }
 
 .cardContainer {
-  width: 100%;
   display: flex;
   justify-content: center;
+  align-items: flex-end;
 }
 
 .cardImage {
@@ -33,6 +33,22 @@
   object-fit: cover;
   border-radius: 12px;
   user-select: none;
+}
+.unlikedButton {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  background-image: url("../../assets/like-icon.png");
+}
+.likedButton {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  background-image: url("../../assets/like-filled-icon.png");
 }
 
 .descriptionContainer {
@@ -133,5 +149,19 @@
   }
   .platforms div ul li {
     font-size: 10px;
+  }
+  .unlikedButton {
+    background-image: url("../../assets/like-icon-16px.png");
+    width: 16px;
+    height: 16px;
+    margin-bottom: 15px;
+    cursor: none;
+  }
+  .likedButton {
+    background-image: url("../../assets/like-filled-icon-16px.png");
+    width: 16px;
+    height: 16px;
+    margin-bottom: 15px;
+    cursor: none;
   }
 }

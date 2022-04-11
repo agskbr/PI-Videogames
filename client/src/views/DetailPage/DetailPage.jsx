@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getVideogameById,
@@ -9,9 +9,10 @@ import notImage from "../../assets/not-image.svg";
 import ratingIcon from "../../assets/rating-icon.png";
 import NotFound404 from "../../components/NotFound404/NotFound404";
 import Loader from "../../components/Loader/Loader";
-export default function DetailPage({ gameId }) {
+export default function DetailPage({ gameId, state }) {
   const dispatch = useDispatch();
   const { videogame, isLoading } = useSelector((state) => state);
+  const [isLiked, setIsLiked] = useState(state.isLiked);
   useEffect(() => {
     dispatch(requestPost());
     dispatch(getVideogameById(gameId));
@@ -27,6 +28,10 @@ export default function DetailPage({ gameId }) {
         <div className={style.cardImage}>
           <img src={videogame.image || notImage} alt="background" />
         </div>
+        <button
+          onClick={() => setIsLiked(!isLiked)}
+          className={isLiked ? style.likedButton : style.unlikedButton}
+        />
       </div>
       <div className={style.relAndRatContainer}>
         <div className={style.releasedAndRat}>
@@ -44,7 +49,7 @@ export default function DetailPage({ gameId }) {
       </div>
       <div className={style.descriptionContainer}>
         <div className={style.description}>
-          {videogame.description.replaceAll(/<\/?[a-z](. \/)?>/g, "")}
+          {videogame.description.replaceAll(/<(.|\n)*?>/g, "")}
         </div>
       </div>
       <div className={style.platforms}>
@@ -52,7 +57,7 @@ export default function DetailPage({ gameId }) {
           Disponible para:
           <ul>
             {videogame.platforms &&
-              videogame.platforms.map((platform, i) => (
+              videogame.platforms.map((platform) => (
                 <li key={platform.id || platform.platform.id}>
                   {platform.name || platform.platform.name}
                 </li>
@@ -73,6 +78,6 @@ export default function DetailPage({ gameId }) {
       </div>
     </div>
   ) : (
-    <NotFound404 search="Juego" />
+    <NotFound404 searching="Juego" />
   );
 }

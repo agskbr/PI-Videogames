@@ -156,18 +156,13 @@ export default function HomePage() {
             displayVideogames
               .slice(counterPage.resultsFrom, counterPage.resultsTo)
               .map((game) => (
-                <Link
-                  className={style.linkToDetail}
+                <Videogame
                   key={game.id}
-                  to={`/videogame/detail/${game.id}`}
-                >
-                  <Videogame
-                    key={game.id}
-                    image={game.image}
-                    name={game.name}
-                    rating={game.rating}
-                  />
-                </Link>
+                  navigateTo={`/videogame/detail/${game.id}`}
+                  image={game.image}
+                  name={game.name}
+                  rating={game.rating}
+                />
               ))
           )}
         </div>
